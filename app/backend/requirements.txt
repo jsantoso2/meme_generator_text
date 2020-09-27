@@ -1,0 +1,15 @@
+-f https://download.pytorch.org/whl/torch_stable.html
+flask == 1.1.2
+flask-cors == 3.0.9
+joblib == 0.16.0
+Pillow == 7.2.0
+pybase64 == 1.0.1
+selenium == 3.141.0
+urllib3 == 1.25.10
+pandas == 1.1.2
+numpy == 1.19.2
+torch==1.6.0+cpu 
+torchvision==0.7.0+cpu
+gunicorn
+
+

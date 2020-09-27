@@ -1,0 +1,27 @@
+.home_title{
+    margin: 20px;
+}
+
+.home_card_images{
+    width: 5rem;
+    height: 5rem;
+    object-fit: cover;
+    margin: 10px;
+    border-radius: 10%;
+}
+
+.home_textfield{
+    display: flex;
+    align-items: center;
+    margin: 20px;
+}
+
+.home_textfield h2{
+    font-size: 1rem;
+}
+
+
+.finalImage{
+    max-width: 400px;
+    margin-bottom: 0px;
+}

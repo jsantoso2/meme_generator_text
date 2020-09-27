@@ -1,0 +1,23 @@
+.navbar_bg{
+    height: 10%;
+    background-color: black; 
+}
+
+.navbar_logo{
+    max-height: 60px;
+    margin: 10px;
+    object-fit: fill;
+}
+
+.navbar_menuitems{
+    display: flex;
+    align-items: center;
+}
+
+.navbar_menuitems p{
+    margin: 10px;
+    margin-top: 30px;
+    color: white;
+    font-size: 1rem;
+}
+

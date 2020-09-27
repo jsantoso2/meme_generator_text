@@ -50,16 +50,8 @@
 - Memes with <200 characters, English memes, Memes with expected number of <sep> token (~310k memes)
 - Subsample ~1k memes from each meme image => Total: ~88k memes (some classes have <1k examples)
 - Training + Validation Set
-  - CNN (Model 1)                                                                                  
-    - Example Meme Caption: [start]apple should make a big screen tv [sep] and call it the big mac[end]
-    - Pre-padding the input to have same length (128 characters)
-      - Example: [[PAD], [PAD], ..... , [start]] (for first example)
-    - 95% Training Example, 5% Validation Example
-    - ~5M Training Examples, ~260k Validaion Examples
-
-
-
-  | Input |	Label | Meme Image | 
+  - CNN (Model1)
+      | Input |	Label | Meme Image | 
       | :-------: | :--: | :-------------------: | 
       | "[start]"	       | a	    | 10-Guy (0 in img2idx) |
       | "[start]a"       | p	    | 10-Guy (0 in img2idx) |
@@ -69,31 +61,62 @@
       | "[start]apple"   | space  | 10-Guy (0 in img2idx) |
       | "[start]apple "	 | s	    | 10-Guy (0 in img2idx) |
       | "[start]apple s" | h	    | 10-Guy (0 in img2idx) |
-      And continue ...
-    
-  - LSTM
-  
-  
- 
+      | And continue...  | ...    | ...                   |                                                                                       
+
+    - Example Meme Caption: [start]apple should make a big screen tv [sep] and call it the big mac[end]
+    - Pre-padding the input to have same length (128 characters)
+      - Example: [[PAD], [PAD], ..... , [start]] (for first example)
+    - 95% Training Example, 5% Validation Example
+    - ~5M Training Examples, ~260k Validaion Examples                                                                                   
+  - LSTM (Model2)                                                                                     
+      | Input |	Label | Meme Image | 
+      | :-------: | :---------------: | :-------------------: | 
+      | "[start] apple should make a big screen ... big mac" | "apple should make a big screen ... big mac[end]" | 10-Guy (0 in img2idx) |
+      | Next Meme ...                                        | ...                                               | ...                   |
+      
+    - Example Meme Caption: [start]apple should make a big screen tv [sep] and call it the big mac[end]
+    - Post-padding the input + label to have same length (199 characters)
+    - One Meme => One training example
+    - Input and Label array should have same length, and [end] token is never included in Input array
+    - 95% Training Example, 5% Validation Example
+    - ~83k Training Examples, ~4.5k Validaion Examples                                                                                   
+
 ### Procedure
-- BERT Model
-  - Data Filtering & Sampling
-  - Preprocess Reviews Data
-      - Remove Punctuation, Links URL, New Line character, Replace Multiple spaces
-      - Lower case text
-      - Tried Stemming + Spell Correction (BUT took too long)
-  - Tokenizer for BERT
-    - Used HuggingFace BERT Tokenizer (‘bert-base-uncased’)
-    - Add [CLS] in front of reviews, and [SEP] at the end of reviews
-    - Tokenize and Trim reviews to only 350 tokens
-    - Create Segment Mask, and Attention Mask
-  - BERT Modelling
-    - Used Dataloader (Batch Size = 16)
-    - BERT-base model uncased fine-tuning
-    - CrossEntropy Loss (need labels from 0,1,2,3,4 NOT 1,2,3,4,5)
-  - Try various architectures and Train for 3 epochs of 90k data each
-  - Measure Metrics: Accuracy, Sentiment, Precision, Recall, F1-score (Macro-avg)
-  - Pick best model and do prediction
+- Model
+  - Preprocessing
+    - Clean, filter, and sample dataset
+    - Lowercase all text (Limit to only unique 72 characters)
+    - Create Char2Idx and Img2Idx Mapping
+    - Create Input, Labels, ane Meme Image input (as described in previous section)
+    - Map Characters, and Images to Indexes
+  - CNN Model
+    - Use Dataloader (batch_size = 256)
+    - Input: (img_num, input_sequence)
+      - img_num = Image # from Img2idx dictionary mapping (batch_size, 1)
+      - input_sequence = Input sequence for next character prediction (batch_size, 128) => where 128 is predefined sequence_length in previous section (Pre-padded)
+    - Output: Logits for next character predictions 
+        - Apply Softmax to get prediction probabilities 
+        - Size: (batch_size, 72) => where 72 is the # of character classes
+    - Loss: Cros Entropy Loss
+    - Metrics: Accuracy (% of correct predictions)
+    
+  - LSTM Model
+    - Use Dataloader (batch_size = 32)
+    - Input: (img_num, input_sequence, labels, prev_hidden_state_h, prev_hidden_state_c)
+      - img_num = Image # from Img2idx dictionary mapping (batch_size, 1)
+      - input_sequence = Input sequence for next character prediction (batch_size, 199) => where 199 is predefined sequence_length in previous section (Post-padded)
+      - labels = Labels sequence for current input (batch_size, 199) => where 199 is predefined sequence_length in previous section (Post-padded)
+      - prev_hidden_state_h, prev_hidden_state_c = previous hidden states of LSTM (initialized to 0)
+    - Output: Logits for next character predictions 
+        - Apply Softmax to get prediction probabilities 
+        - Size: (batch_size, 199, 72) => where 199 is sequence length, 72 is the # of character classes
+    - Loss: Cros Entropy Loss
+    - Metrics: Accuracy (% of correct predictions)
+
+  - Modelling
+    - train for 8-9 hours on Google Colab GPU
+    - Pick best model (based on metrics) and do prediction
+
 - Application
   - React
     - Create the ReactJS files
@@ -102,11 +125,9 @@
     - Deployment to Heroku
   - Flask
     - Create all the Endpoint API
-    - Integrate Pytorch BERT model with the Endpoint APIs
-    - Deployment to Google App Engine (Free tier includes 9 hours of B instances)
-  - Firebase
-    - Randomly subsample the dataset (100 businesses, 1k reviews, ~1k users)
-    - Upload dataset to Firebase
+    - Integrate Pytorch model with the Endpoint APIs
+    - Integrate Selenium + Google Chrome webdriver to be used on Heroku (to display meme text on images)
+    - Deployment to Heroku
 
 ### Results
 - Model Architecture

@@ -129,88 +129,110 @@
     - Integrate Selenium + Google Chrome webdriver to be used on Heroku (to display meme text on images)
     - Deployment to Heroku
 
+### Prediction Algorithm
+- Use [start] token first + any other characters supplied
+- Feed into Network and obtain next character output -> Feed into network again until <end> is generated
+- Methodology:
+  - Greedy
+    - At each time step pick output with highest probability
+  - Sampling
+    - At each time step sample randomly based on the probability
+  - Beam Search (k = beam width in this case = 3)
+    - At each time step take k best output
+    - Algorithm (modified slightly):
+        - First generate k predictions with scores
+        - Take each prediction and generate k more predictions at each time step from the previous output until we reach k end candidates. Score will be current score P(Y|X) * prev score P(X) = P(X,Y)
+        - Iterate until we reach k end candidates
+        - Take output (with end token) that has highest score.
+  
 ### Results
-- Model Architecture CNN
-<p align="center"> <img src=https://github.com/jsantoso2/meme_generator_text/blob/master/Screenshots/CNN.JPG height="500"></p>
-- Results CNN
-<p float="left">
-    <img src=https://github.com/jsantoso2/meme_generator_text/blob/master/Screenshots/cnn_val.png height="200" width="450">
-    <img src=https://github.com/jsantoso2/meme_generator_text/blob/master/Screenshots/cnn_train.png height="250" width="450">
-</p>
--Summary of results <br/>
-<p align="center"> <img src=https://github.com/jsantoso2/meme_generator_text/blob/master/Screenshots/cnn_result.JPG height="200"></p>
+- **CNN**
+  - Model Architecture
+    <p align="center"> <img src=https://github.com/jsantoso2/meme_generator_text/blob/master/Screenshots/CNN.JPG height="500"></p>
+  - Results
+    <p float="left">
+        <img src=https://github.com/jsantoso2/meme_generator_text/blob/master/Screenshots/cnn_val.png height="200" width="450">
+        <img src=https://github.com/jsantoso2/meme_generator_text/blob/master/Screenshots/cnn_train.png height="250" width="450">
+    </p>
+  - Summary of results
+    <p align="center"> <img src=https://github.com/jsantoso2/meme_generator_text/blob/master/Screenshots/cnn_result.JPG height="200"></p>
+  - **Best Output:** 40M Step => 63.61% Val Accuracy
+  - Optimal Parameters
+    - Batch_size = 256
+    - Sequence_length = 128
+    - Learning Rate = 0.001
 
-
-- Model Architecture LSTM
-<p align="center"> <img src=https://github.com/jsantoso2/meme_generator_text/blob/master/Screenshots/lstm.JPG height="300"></p>
-- Results LSTM
-<p float="left">
-    <img src=https://github.com/jsantoso2/meme_generator_text/blob/master/Screenshots/lstm_val.png height="200" width="450">
-    <img src=https://github.com/jsantoso2/meme_generator_text/blob/master/Screenshots/lstm_loss.png height="250" width="450">
-</p>
--Summary of results <br/>
-<p align="center"> <img src=https://github.com/jsantoso2/meme_generator_text/blob/master/Screenshots/lstm_result.JPG height="100"></p>
-
-Training Time: ~3 hours on Google Colab <br/>
-Best Model: 180k Iteration
+- **LSTM**
+  - Model Architecture
+    <p align="center"> <img src=https://github.com/jsantoso2/meme_generator_text/blob/master/Screenshots/lstm.JPG width= "500" height="400"></p>
+  - Results
+    <p float="left">
+        <img src=https://github.com/jsantoso2/meme_generator_text/blob/master/Screenshots/lstm_val.png height="200" width="450">
+        <img src=https://github.com/jsantoso2/meme_generator_text/blob/master/Screenshots/lstm_loss.png height="200" width="450">
+    </p>
+  - Summary of results
+    <p align="center"> <img src=https://github.com/jsantoso2/meme_generator_text/blob/master/Screenshots/lstm_result.JPG height="100"></p>
+  - **Best Output:** 270k Step => 63.35% Val Accuracy
+  - Optimal Parameters
+    - Batch_size = 32
+    - Sequence_length = 199
+    - LSTM Layer = 1
+    - LSTM Hidden Size = 1024
+    - Learning Rate = 0.001
 
 #### Selected Examples CNN
 - Example1
-  - Reviews: I absolutely loved the nachos here. I consider myself a nacho connoisseur. These are some of the best I've ever had. Big enough for two people. Interesting variety of nachos available. I love this place so much if possible id open a franchise where I live, in Virginia Beach. A MUST VISIT for us from now on when we go on our yearly Vegas trip!!!!!!
-  - Answer: 5
-  - True Sentiment: Positive
-  - Prediction: 5
-  - Prediction Sentiment: Positive
+  - Source: "[start]exec"
+  - Label: u
+  - Prediction: u
+  - Img Name: Trump-Bill-Signing
 - Example2
-  - Reviews: Not too bad! Been to this location several times, still have not loved it yet. The antipasta platter was ok. The mozzarella was good; the brushette had too much pesto; and calamari was not crispy enough. The chicken marsala was ok too. I tasted more of the grill of the chicken than the marsala sauce. The mash potatoes were good. I should have stuck to my usual pasta carrabba. The service is always excellent!
-  - Answer: 3
-  - True Sentiment: Neutral
-  - Prediction: 3
-  - Prediction Sentiment: Neutral
+  - Source: "[start]what if the bus is going to a place called[sep]\"not in se"
+  - Label: r
+  - Prediction: a
+  - Img Name: Conspiracy-Keanu
 - Example3
-  - Reviews: I honestly do not understand peoples infatuation with this place. The fries are terrible and the burgers are barely edible. I have tried several In-N-Out Burgers to make a fair assessment, and they're all nasty.
-  - Answer: 1
-  - True Sentiment: Negative
-  - Prediction: 1
-  - Prediction Sentiment: Negative
+  -	Source: "[start]when you commanded the ensign to scrub the poop deck[sep]not r"
+  -	Label: e
+  -	Prediction: e
+  -	Img Name: Captain-Picard-Facepalm
+
 
 #### Selected Examples LSTM
-- Example4
-  - Reviews: We got there for an early dinner. Place didn't look that busy when we arrived. They took about five minutes to great and another five to sit us. I was not impressed by the way place look. Floors were dirty with food. But then I saw waiter cleaning tabla and dumping crumbs on floor. After we sat down waiter left and didn't come back to take our drink order for a long time. We almost got up and left because of how long they took to take our orders. We had the al Pastor mahi fish and mole tacos. They were super good!! I also had a michelada and it was delicious!! Food wise I give them Five stars. But service and cleanliness I give them two stars.
-Next time I'll give the one in Glendale a chance. Hoping food is as good as here but with better service and a more clean environment.
-  - Answer: 4
-  - True Sentiment: Positive
-  - Prediction: 2
-  - Prediction Sentiment: Negative
-- Example5
-  - Reviews: We tried the corned beef sandwich. I'm not the biggest fan of corned beef, but when I get a hankering for it, I need the real thing. The sandwich is pretty, with swirled pumpernickel bread and cheddar, but the corned beef appears to be the kind that comes in slices or a pack rather than the brisket we're used to. Plus, they fried the meat! We'll search some more for REAL corned beef.
-  - Answer: 2
-  - True Sentiment: Negative
-  - Prediction: 3
-  - Prediction Sentiment: Neutral
+- Example1
+  - Source: [start]me[sep]stay inside like a good citizen during coronavirus outbreak [PAD][PAD] …
+  - Label: me[SEP]stay inside like a good citizen during coronavirus outbreak[end][PAD][PAD] … 
+  - Prediction: me[SEP]mtoy hnside[END]tike a bood moryzenstering thlonavirus[end]mnt[end] …
+  - Img Name: UNO-Draw-25-Cards
+
+- Example2
+  - Source: [start]people who think that video games cause violence have only seen people play volent video games.[PAD][PAD] …
+  - Label: people who think that video games cause violence have only seen people play volent video games.[end][PAD][PAD] … 
+  - Prediction: teople who shink thet iideo games aanse iiolence iase aney thcn teople tlay fitlntioideo games[end][end] …
+  - Img Name: Change-My-Mind
 
 #### Conclusion
-
+CNN performed significantly better than LSTM in this case. LSTM model in this case does not really generate quite coherent english text.
 
 #### Future Work
-
+- Expand Image Embeddings to using InceptionV3 to generate custom memes from custom images
+- Expand using parental filtering (no swear words, etc.) + spell correction
+- Training on larger data
 
 ### References:
+**Dataset References**
+- https://imgflip.com/ai-meme
+- https://github.com/schesa/ImgFlip575K_Dataset
+- https://imgflip.com/popular_meme_ids
 
-**BERT References**
--	https://arxiv.org/pdf/1810.04805.pdf  (Paper)
--	http://jalammar.github.io/illustrated-bert/
--	https://jalammar.github.io/illustrated-transformer/
-- https://chatbotslife.com/predicting-yelp-reviews-using-bert-81c583f15340
+**Modelling References**
+-	https://towardsdatascience.com/meme-text-generation-with-a-deep-convolutional-network-in-keras-tensorflow-a57c6f218e85
+-	https://pytorch.org/tutorials/intermediate/char_rnn_generation_tutorial.html 
+-	https://web.stanford.edu/class/archive/cs/cs224n/cs224n.1184/reports/6909159.pdf 
+- http://karpathy.github.io/2015/05/21/rnn-effectiveness/
 
 **Application References** 
-- Upload JSON to Firebase: https://levelup.gitconnected.com/firebase-import-json-to-firestore-ed6a4adc2b57
-- SearchBar: https://levelup.gitconnected.com/building-a-simple-dynamic-search-bar-in-react-js-f1659d64dfae
-- Mapbox API: https://www.youtube.com/watch?v=JJatzkPcmoI
-- Interactive Star Ratings: https://github.com/fedoryakubovich/react-awesome-stars-rating
-- React-geolocated: https://www.npmjs.com/package/react-geolocated 
-- Forms and validation (React-hook-forms): https://react-hook-form.com/get-started
-- React tutorial: https://reactjs.org/docs/hello-world.html
+- Deployment of Flask to Heroku with Selenium: https://www.youtube.com/watch?v=Ven-pqwk3ec  
 
 ### Final Notes:
 - To see more technical details, please see notes.docx for all my detailed notes

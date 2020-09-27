@@ -130,34 +130,31 @@
     - Deployment to Heroku
 
 ### Results
-- Model Architecture
-<p align="center"> <img src=https://github.com/jsantoso2/yelp-clone-ml-project/blob/master/screenshots/model1.JPG height="450"></p>
-- Results
-<p align="center"> <img src=https://github.com/jsantoso2/yelp-clone-ml-project/blob/master/screenshots/result1.jpg height="450"></p>
-<p align="center"> <img src=https://github.com/jsantoso2/yelp-clone-ml-project/blob/master/screenshots/result2.jpg height="250"></p>
+- Model Architecture CNN
+<p align="center"> <img src=https://github.com/jsantoso2/meme_generator_text/blob/master/Screenshots/CNN.JPG height="500"></p>
+- Results CNN
+<p float="left">
+    <img src=https://github.com/jsantoso2/meme_generator_text/blob/master/Screenshots/cnn_val.png height="200" width="450">
+    <img src=https://github.com/jsantoso2/meme_generator_text/blob/master/Screenshots/cnn_train.png height="250" width="450">
+</p>
+-Summary of results <br/>
+<p align="center"> <img src=https://github.com/jsantoso2/meme_generator_text/blob/master/Screenshots/cnn_result.JPG height="200"></p>
 
-- Summary of results<br/>
-Summary Table of Results for various iterations
 
-| Iteration |	Loss | Acc | Sentiment Acc | Precision | Recall | F1 |
-| :-------: | :--: | :-: | :-----------: | :-------: | :----: | :-: |
-| 30k  | 0.83 | 62.75 | 82.11 | 62.49 | 62.74 | 62.58 |
-| 60k	 | 0.80 |	64.40	| 83.25	| 64.27	| 64.39	| 64.28 |
-| 90k  | 0.78 |	65.70	| 84.04	| 65.44	| 65.68	| 65.53 |
-| 120k | 0.78 |	65.92	| 84.12	| 65.76	| 65.90	| 65.80 |
-| 150k | 0.78 |	66.30	| 84.32	| 66.08	| 66.29	| 66.14 |
-| 180k | 0.78 |	66.33	| 84.16	| 66.13	| 66.32	| 66.19 |
-| 210k | 0.82 |	66.23	| 84.19	| 66.03	| 66.22	| 66.09 |
-| 240k | 0.82 |	66.08	| 84.26	| 65.99	| 66.07	| 66.00 |
-| 270k | 0.82 |	66.09	| 84.31	| 66.04	| 66.08	| 66.03 |
-
-  - Sentiment Classification Rule
-    - Ratings 1-2: Negative Sentiment, Rating 3: Neutral Sentiment, Ratings 4-5: Positive Sentiment
+- Model Architecture LSTM
+<p align="center"> <img src=https://github.com/jsantoso2/meme_generator_text/blob/master/Screenshots/lstm.JPG height="300"></p>
+- Results LSTM
+<p float="left">
+    <img src=https://github.com/jsantoso2/meme_generator_text/blob/master/Screenshots/lstm_val.png height="200" width="450">
+    <img src=https://github.com/jsantoso2/meme_generator_text/blob/master/Screenshots/lstm_loss.png height="250" width="450">
+</p>
+-Summary of results <br/>
+<p align="center"> <img src=https://github.com/jsantoso2/meme_generator_text/blob/master/Screenshots/lstm_result.JPG height="100"></p>
 
 Training Time: ~3 hours on Google Colab <br/>
 Best Model: 180k Iteration
 
-#### Selected Examples (Good)
+#### Selected Examples CNN
 - Example1
   - Reviews: I absolutely loved the nachos here. I consider myself a nacho connoisseur. These are some of the best I've ever had. Big enough for two people. Interesting variety of nachos available. I love this place so much if possible id open a franchise where I live, in Virginia Beach. A MUST VISIT for us from now on when we go on our yearly Vegas trip!!!!!!
   - Answer: 5
@@ -177,7 +174,7 @@ Best Model: 180k Iteration
   - Prediction: 1
   - Prediction Sentiment: Negative
 
-#### Selected Examples (Bad)
+#### Selected Examples LSTM
 - Example4
   - Reviews: We got there for an early dinner. Place didn't look that busy when we arrived. They took about five minutes to great and another five to sit us. I was not impressed by the way place look. Floors were dirty with food. But then I saw waiter cleaning tabla and dumping crumbs on floor. After we sat down waiter left and didn't come back to take our drink order for a long time. We almost got up and left because of how long they took to take our orders. We had the al Pastor mahi fish and mole tacos. They were super good!! I also had a michelada and it was delicious!! Food wise I give them Five stars. But service and cleanliness I give them two stars.
 Next time I'll give the one in Glendale a chance. Hoping food is as good as here but with better service and a more clean environment.
@@ -191,6 +188,12 @@ Next time I'll give the one in Glendale a chance. Hoping food is as good as here
   - True Sentiment: Negative
   - Prediction: 3
   - Prediction Sentiment: Neutral
+
+#### Conclusion
+
+
+#### Future Work
+
 
 ### References:
 

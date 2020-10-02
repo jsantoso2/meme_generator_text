@@ -33,7 +33,7 @@ from flask_cors import CORS
 
 # initialize flask app
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*/": {"origins":"*"}})
 
 # read json for dictionary mapping
 # open from json file
@@ -573,6 +573,7 @@ def display_image_format(base_url, img_num, final_str):
         # selenium preferences to prevent load images
         # define webdriver options
         chrome_options = webdriver.ChromeOptions()
+        # uncomment for deployment
         chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
         chrome_options.add_argument("--headless")
         chrome_options.add_argument("--disable-dev-shm-usage")
